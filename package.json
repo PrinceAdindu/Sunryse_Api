@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Tanrajsd/Terra-Api.git"
+  },
+  "author": "Tanraj Dhillon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tanrajsd/Terra-Api/issues"
+  },
+  "homepage": "https://github.com/Tanrajsd/Terra-Api#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "exrpess": "0.0.1-security"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}
