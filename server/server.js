@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes/routes');
-const config = require('../config/config');
+const { port, url } = require('./config');
 
 const server = express();
 
@@ -13,15 +13,15 @@ function create() {
       credentials: true,
     }),
   );
-  // Returns middleware that parses json
   server.use(express.json());
   server.use(cookieParser());
-  // Set up routes
+
+  // Connect Routes
   routes.init(server);
 }
 async function start() {
-    server.listen(config.port, () => {
-    console.log('Express server listening on - ', config.url);
+  server.listen(port, () => {
+    console.log('Express server listening on - ', `${url}`);
   });
 }
 module.exports = { create, start };
