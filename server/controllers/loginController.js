@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
-// const path = require('path');
 const config = require('../config');
 
 const {
@@ -11,47 +9,96 @@ const {
   verifyRefeshToken,
   createAccessToken,
 } = require('../services/login/tokenService');
+const {
+  getTherapist,
+  editTherapist,
+} = require('../services/therapist/therapistService');
 
 router.post('/', async (req, res, next) => {
-  const { user, pwd } = req.body;
-  if (!user || !pwd)
+  const { email, password } = req.body;
+  if (!email || !password)
     return res
       .status(400)
-      .json({ message: 'Username and password are required.' });
+      .json({ message: 'Username and password are required.' }); // Faulty request
 
-  const foundUser = false; //TODO: look for user in db
-  if (!foundUser) return res.sendStatus(401); // Unauthorized
+  let foundTherapist;
 
-  const match = await bcrypt.compare(pwd, foundUser.password);
-  if (match) {
-    const tokenBody = { userId: foundUser.userId };
+  try {
+    foundTherapist = await getTherapist({ email });
+    if (!foundTherapist)
+      return res.status(401).json({ message: 'User does not exist' }); // Unauthorized
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'Error finding matching therapist' });
+  }
+
+  let match;
+
+  try {
+    match = await bcrypt.compare(password, foundTherapist.password);
+  } catch (err) {
+    return res.status(500).json({ message: 'Error unhashing password' });
+  }
+
+  if (!match)
+    return res
+      .status(401)
+      .json({ message: 'Unauthorized, Incorrect password' }); // Unauthorized
+
+  try {
+    const tokenBody = { userId: foundTherapist.userId };
     const [accessToken, refreshToken] = createTokens(tokenBody);
-    // TODO: save refresh token with the user for logout and revoke purposes
+    const therapist = await editTherapist(foundTherapist.userId, {
+      refreshToken: refreshToken,
+    });
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       sameSite: 'None',
       secure: true,
-      maxAge: config.REFRESH_COOKIE_EXP,
+      maxAge: config.refreshCookieExp,
     });
-    res.status(200).json({ accessToken });
-  } else {
-    res.sendStatus(401);
+    return res.status(200).json({ accessToken });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'Error creating and storing refresh token' });
   }
 });
 
 router.post('/refresh', async (req, res, next) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.sendStatus(401); // Unauthorized
+  if (!cookies?.jwt)
+    return res
+      .status(401)
+      .json({ message: 'Unauthorized, user has no auth cookie' }); // Unauthorized
   const refreshToken = cookies.jwt;
 
-  const foundUser = false; // usersDB.users.find(person => person.refreshToken === refreshToken); TODO: Search for the refresh token and the connected user
-  if (!foundUser) return res.sendStatus(403); // Forbidden
+  let foundTherapist;
+  try {
+    foundTherapist = await getTherapist({ refreshToken });
+    if (!foundTherapist)
+      return res
+        .status(403)
+        .json({ message: 'Forbidden, refresh token does not exist' }); // Forbidden
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'Error finding matching refresh token' });
+  }
 
-  const tokenBody = { userId: foundUser.userId };
-  const valid = verifyRefeshToken(refreshToken, tokenBody);
-  if (!valid) return res.sendStatus(403); // Forbidden
-  const newAccessToken = createAccessToken(tokenBody);
-  return res.status(200).json({ newAccessToken });
+  const tokenBody = { userId: foundTherapist.userId };
+  try {
+    const valid = verifyRefeshToken(refreshToken, tokenBody);
+    if (!valid)
+      return res
+        .status(403)
+        .json({ message: 'Forbidden, refresh token is not valid' }); // Forbidden
+  } catch (err) {
+    return res.status(500).json({ message: 'Error verifying refresh token' });
+  }
+  const accessToken = createAccessToken(tokenBody);
+  return res.status(200).json({ accessToken });
 });
 
 module.exports = router;

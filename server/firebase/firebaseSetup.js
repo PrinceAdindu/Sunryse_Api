@@ -1,21 +1,20 @@
 const firebase = require('firebase/compat/app');
 require('firebase/compat/auth');
 require('firebase/compat/firestore');
-const config = require('../config/config');
+const config = require('../config');
 
 const firebaseConfig = {
-  apiKey: config.firebaseApiKey,
-  authDomain: config.firebaseAuthDomain,
-  projectId: config.firebaseProjectID,
-  storageBucket: config.firebaseStorageBucket,
-  messagingSenderId: config.firebaseMessagingSenderID,
-  appId: config.firebaseAppID,
-  measurementId: config.firebaseMeasurementID,
+  apiKey: config.fbApiKey,
+  authDomain: config.fbAuthDomain,
+  projectId: config.fbProjectId,
+  storageBucket: config.fbStorageBucket,
+  messagingSenderId: config.fbMessagingSenderId,
+  appId: config.fbAppId,
+  measurementId: config.fbMeasurementId,
 };
 
-const db = () => {
-  firebase.initializeApp(firebaseConfig);
-  return firebase.firestore();
-};
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
 
 module.exports = db;
