@@ -1,7 +1,11 @@
 /* Therapsit Model
 {
+    userId: string,
+    stripeId: string,
     email: string,
     password: string,
+    refreshToken: string,
+
     firstname: string,
     lastname: string,
     birthdate: string,
@@ -12,6 +16,14 @@
         country: string,
         postalCode : string,
     },
+    schedule: [{
+        day: string, 
+        times: [{
+            start: string, 
+            end: string
+        }]
+    }],
+    timeZone: string
     licenses: [
         {   
             role: string,

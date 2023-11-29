@@ -4,11 +4,13 @@ require('dotenv').config();
 
 const verifyAccessToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  if (!authHeader) return res.sendStatus(401); // Unauthorizes
+  if (!authHeader)
+    return res.status(401).json({ message: 'Authorization not provided' }); // Unauthorizes
   const token = authHeader.split(' ')[1];
-  jwt.verify(token, config.accessTokenSecret, (err, decoded) => {
-    if (err) return res.sendStatus(403); // Invalid token forbidden
-    req.userId = decoded.userId;
+  jwt.verify(token, config.accessTokenSecret, (error, decoded) => {
+    if (error)
+      return res.status(403).json({ message: 'Inavlaid access token' }); // Invalid token forbidden
+    req.id = decoded.id;
     next();
   });
 };

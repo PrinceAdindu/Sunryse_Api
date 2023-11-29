@@ -16,6 +16,7 @@ const dev = {
   fbMessagingSenderId: process.env.DEV_FB_MESSAGING_SENDER_ID,
   fbAppId: process.env.DEV_FB_APP_ID,
   fbMeasurementId: process.env.DEV_FB_MEASUREMENT_ID,
+  stripeApiKey: process.env.DEV_STRIPE_API_KEY,
 };
 
 const prod = {
@@ -32,6 +33,7 @@ const prod = {
   fbMessagingSenderId: process.env.PROD_FB_MESSAGING_SENDER_ID,
   fbAppId: process.env.PROD_FB_APP_ID,
   fbMeasurementId: process.env.PROD_FB_MEASUREMENT_ID,
+  stripeApiKey: process.env.PROD_STRIPE_API_KEY,
 };
 
 let config;

@@ -1,22 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const {
-  getTherapist,
-  editTherapist,
-} = require('../services/therapist/therapistService');
+const { getClinic, editClinic } = require('../services/clinic/clinicService');
 
 router.post('/', async (req, res, next) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.status(204); // No content to return
-  const refreshToken = cookies.jwt;
+  try {
+    if (!cookies?.jwt)
+      return res.status(200).json({ message: 'Logout successful' });
+    const refreshToken = cookies.jwt;
 
-  const foundTherapist = await getTherapist({ refreshToken });
-  if (foundTherapist) {
-    await editTherapist(foundTherapist.userId, { refreshToken: '' });
+    const foundClinic = await getClinic({ refreshToken });
+    if (foundClinic) {
+      await editClinic(foundClinic.id, { refreshToken: '' });
+    }
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error - logout unsuccessful' });
   }
-  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-  res.status(204);
 });
 
 module.exports = router;

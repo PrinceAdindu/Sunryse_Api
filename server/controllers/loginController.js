@@ -9,10 +9,7 @@ const {
   verifyRefeshToken,
   createAccessToken,
 } = require('../services/login/tokenService');
-const {
-  getTherapist,
-  editTherapist,
-} = require('../services/therapist/therapistService');
+const { getClinic, editClinic } = require('../services/clinic/clinicService');
 
 router.post('/', async (req, res, next) => {
   const { email, password } = req.body;
@@ -21,38 +18,33 @@ router.post('/', async (req, res, next) => {
       .status(400)
       .json({ message: 'Username and password are required.' }); // Faulty request
 
-  let foundTherapist;
+  let foundClinic;
 
   try {
-    foundTherapist = await getTherapist({ email });
-    if (!foundTherapist)
-      return res.status(401).json({ message: 'User does not exist' }); // Unauthorized
+    foundClinic = await getClinic({ email });
+    if (!foundClinic)
+      return res.status(401).json({ message: 'Clinic does not exist' }); // Unauthorized
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: 'Error finding matching therapist' });
+    return res.status(500).json({ message: 'Error finding matching clinic' });
   }
 
-  let match;
-
   try {
-    match = await bcrypt.compare(password, foundTherapist.password);
+    const match = await bcrypt.compare(password, foundClinic.password);
+    if (!match)
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized, Incorrect password' }); // Unauthorized
   } catch (err) {
     return res.status(500).json({ message: 'Error unhashing password' });
   }
 
-  if (!match)
-    return res
-      .status(401)
-      .json({ message: 'Unauthorized, Incorrect password' }); // Unauthorized
-
   try {
-    const tokenBody = { userId: foundTherapist.userId };
+    const tokenBody = { id: foundClinic.id };
     const [accessToken, refreshToken] = createTokens(tokenBody);
-    const therapist = await editTherapist(foundTherapist.userId, {
+    const clinic = await editClinic(foundClinic.id, {
       refreshToken: refreshToken,
     });
-    res.cookie('jwt', refreshToken, {
+    res.cookie('clinicjwt', refreshToken, {
       httpOnly: true,
       sameSite: 'None',
       secure: true,
@@ -68,16 +60,16 @@ router.post('/', async (req, res, next) => {
 
 router.post('/refresh', async (req, res, next) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt)
+  if (!cookies?.clinicjwt)
     return res
       .status(401)
       .json({ message: 'Unauthorized, user has no auth cookie' }); // Unauthorized
-  const refreshToken = cookies.jwt;
+  const refreshToken = cookies.clinicjwt;
 
-  let foundTherapist;
+  let foundClinic;
   try {
-    foundTherapist = await getTherapist({ refreshToken });
-    if (!foundTherapist)
+    foundClinic = await getClinic({ refreshToken });
+    if (!foundClinic)
       return res
         .status(403)
         .json({ message: 'Forbidden, refresh token does not exist' }); // Forbidden
@@ -87,7 +79,7 @@ router.post('/refresh', async (req, res, next) => {
       .json({ message: 'Error finding matching refresh token' });
   }
 
-  const tokenBody = { userId: foundTherapist.userId };
+  const tokenBody = { id: foundClinic.id };
   try {
     const valid = verifyRefeshToken(refreshToken, tokenBody);
     if (!valid)

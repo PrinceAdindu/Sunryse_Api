@@ -27,6 +27,7 @@
     "firebase": "^10.4.0",
     "jsonwebtoken": "^9.0.2",
     "path": "^0.12.7",
+    "stripe": "^14.2.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-  getTherapist,
-  createTherapist,
-} = require('../services/therapist/therapistService');
+const { getClinic, createClinic } = require('../services/clinic/clinicService');
+const { createStripeAccount } = require('../services/stripe/stripeService');
 
-router.post('/therapist', async (req, res, next) => {
+router.post('/clinic', async (req, res, next) => {
   const { email, password, firstname, lastname } = req.body;
   if (!email || !password || !firstname || !lastname)
     return res.status(400).json({
@@ -14,34 +12,36 @@ router.post('/therapist', async (req, res, next) => {
     });
 
   try {
-    const foundTherapist = await getTherapist({ email });
-    if (foundTherapist) {
+    const foundClinic = await getClinic({ email });
+    if (foundClinic) {
       return res.status(409).json({
         message: 'This email is already registered',
       });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Error checking to see if therapist already exists.',
+      message: 'Error checking to see if clinic already exists.',
     });
   }
 
   try {
+    const stripeId = await createStripeAccount(email);
     const data = {
       email,
       password,
       firstname,
       lastname,
+      stripeId,
     };
-    const newTherapist = await createTherapist(data);
+    const newClinic = await createClinic(data);
     return res.status(200).json({
-      message: 'Successfully created therapist.',
+      message: 'Successfully created clinic.',
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: 'Error creating a therapist.',
+      message: 'Error creating a clinic.',
     });
   }
 });

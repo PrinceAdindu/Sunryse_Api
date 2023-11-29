@@ -21,8 +21,8 @@ const createTokens = (data) => [
 ];
 
 const verifyRefeshToken = async (refreshToken, data) => {
-  jwt.verify(refreshToken, config.refreshTokenSecret, (err, decoded) => {
-    return err || data.userId !== decoded.userId;
+  jwt.verify(refreshToken, config.refreshTokenSecret, (error, decoded) => {
+    return error || data.userId !== decoded.userId;
   });
 };
 
