@@ -17,6 +17,9 @@ const dev = {
   fbAppId: process.env.DEV_FB_APP_ID,
   fbMeasurementId: process.env.DEV_FB_MEASUREMENT_ID,
   stripeApiKey: process.env.DEV_STRIPE_API_KEY,
+  stripeWebhookSecret: process.env.DEV_STRIPE_WEBHOOK_SECRET,
+  stripeAccountLinkRefreshUrl: process.env.DEV_STRIPE_ACCOUNT_LINK_REFRESH_URL,
+  stripeAccountLinkReturnUrl: process.env.DEV_STRIPE_ACCOUNT_LINK_RETURN_URL,
 };
 
 const prod = {

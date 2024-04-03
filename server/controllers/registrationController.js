@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const { getClinic, createClinic } = require('../services/clinic/clinicService');
-const { createStripeAccount } = require('../services/stripe/stripeService');
+const { createStripeAccount } = require('../services/stripeService');
+const { DEFAULT_CLINIC_DATA } = require('../models/clinicModel');
 
 router.post('/clinic', async (req, res, next) => {
-  const { email, password, firstname, lastname } = req.body;
-  if (!email || !password || !firstname || !lastname)
+  const { email, password } = req.body;
+  if (!email || !password)
     return res.status(400).json({
-      message: 'Email, password and full name are required for registration.',
+      message: 'Email, password are required for registration.',
     });
 
   try {
@@ -26,13 +27,9 @@ router.post('/clinic', async (req, res, next) => {
   }
 
   try {
-    const stripeId = await createStripeAccount(email);
     const data = {
       email,
       password,
-      firstname,
-      lastname,
-      stripeId,
     };
     const newClinic = await createClinic(data);
     return res.status(200).json({

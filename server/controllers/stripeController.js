@@ -1,47 +1,58 @@
 const express = require('express');
 const router = express.Router();
-const { getClinic, editClinic } = require('../services/clinic/clinicService');
+const { getClinic } = require('../services/clinic/clinicService');
+const {
+  createAccountLink,
+  createDahsboardLink,
+  getStripeStatus,
+} = require('../services/stripeService');
 
 router.post('/', async (req, res, next) => {
-  const event = JSON.parse(req.body);
-  const stripeId = event.data.object.id;
+  const id = req.id;
 
-  const data = { stripeId: stripeId };
-  const userId = await getClinic(data);
-
-  //   switch (event.type) {
-  //     case 'account.application.deauthorized':
-  //       await archiveTherapist(userId);
-  //     case 'account.updated':
-  //       updateStripeAccount(userId, event);
-  //     case 'checkout.session.completed':
-  //       const sessionId = event.data.object.metaData.sessionId;
-  //       const updates = { status: 'booked' };
-  //       upadateSession(userId, sessionId, updates);
-  //     case 'checkout.session.expired':
-  //       const sessionId = event.data.object.metaData.sessionId;
-  //       deleteSession(userId, sessionId, updates);
-  //   }
-
-  const { timeZone, schedule } = req.body;
-  if (!timeZone || !schedule)
-    return res.status(400).json({
-      message: 'Timezone and schedule details are required.',
-    });
   try {
-    const data = {
-      timeZone,
-      schedule,
-    };
-    const newTherapist = await editTherapist(req.userId, data);
-    return res.status(200).json({
-      message: 'Successfully saved therapist business hours.',
+    const clinic = await getClinic({ id });
+    const accountLink = await createAccountLink(clinic.stripeId);
+    return res.status(200).send({
+      ...accountLink,
+      message: 'Successfully created clninc account link',
     });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({
-      message: 'Error saving therapist business hours.',
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error creating clinic account link' });
+  }
+});
+
+router.get('/', async (req, res, next) => {
+  const id = req.id;
+
+  try {
+    const clinic = await getClinic({ id });
+    const dashboardLink = await createDahsboardLink(clinic.stripeId);
+    return res.status(200).send({
+      ...dashboardLink,
+      message: 'Successfully created clninc dashboard link',
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error creating clinic dashboard link' });
+  }
+});
+
+router.get('/status', async (req, res, next) => {
+  const id = req.id;
+
+  try {
+    const clinic = await getClinic({ id });
+    const status = await getStripeStatus(clinic.stripeId);
+
+    return res.status(200).send({
+      ...status,
+      message: 'Successfully retrieved stripe status',
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error retrieving stripe status' });
   }
 });
 

@@ -7,11 +7,31 @@ const {
   setDoc,
   getDocs,
   updateDoc,
+  deleteDoc,
 } = require('firebase/firestore');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+const { createStripeAccount } = require('../stripeService');
+const { DEFAULT_CLINIC_DATA } = require('../../models/clinicModel');
 
 const clinicCollection = collection(db, 'Clinic');
+const archivedClinicCollection = collection(db, 'ArchivedClinic');
+
+async function createClinic(data) {
+  const id = uuidv4();
+  data.id = id;
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  data.password = hashedPassword;
+
+  const stripeId = await createStripeAccount(data.email);
+  data.stripeId = stripeId;
+
+  const clinicData = { ...data, ...DEFAULT_CLINIC_DATA };
+
+  const clinic = await setDoc(doc(clinicCollection, id), clinicData);
+  return clinic;
+}
 
 async function getClinic(properties) {
   let q = query(clinicCollection);
@@ -32,25 +52,25 @@ async function getClinic(properties) {
   }
 }
 
-async function createClinic(data) {
-  const id = uuidv4();
-  const hashedPassword = await bcrypt.hash(data.password, 10);
-  data.password = hashedPassword;
-  data.id = id;
-
-  const clinic = await setDoc(doc(clinicCollection, id), data);
-  return clinic;
-}
-
 async function editClinic(id, data) {
-  console.log(data, id);
   const clinic = doc(clinicCollection, id);
   await updateDoc(clinic, data);
   return clinic;
+}
+
+async function archiveClinic(id) {
+  const clinic = doc(clinicCollection, id);
+  await deleteDoc(clinic);
+  const archivedClinic = await setDoc(
+    doc(archivedClinicCollection, id),
+    clinic,
+  );
+  return archivedClinic;
 }
 
 module.exports = {
   getClinic,
   createClinic,
   editClinic,
+  archiveClinic,
 };

@@ -1,8 +1,8 @@
 const express = require('express');
+const { editClinic } = require('../../services/clinic/clinicService');
 const router = express.Router();
-const { getClinic, editClinic } = require('../services/clinic/clinicService');
 
-router.post('/hours', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const { timeZone, schedule } = req.body;
   const id = req.id;
   if (!timeZone || !schedule)

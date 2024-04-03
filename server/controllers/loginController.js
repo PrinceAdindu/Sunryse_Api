@@ -8,7 +8,7 @@ const {
   createTokens,
   verifyRefeshToken,
   createAccessToken,
-} = require('../services/login/tokenService');
+} = require('../services/tokenService');
 const { getClinic, editClinic } = require('../services/clinic/clinicService');
 
 router.post('/', async (req, res, next) => {

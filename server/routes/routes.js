@@ -12,14 +12,6 @@ function init(server) {
     return next();
   });
 
-  server.use('*', (req, res, next) => {
-    console.log(`REQ <<< ${req.method} ${req.originalUrl}`);
-    res.on('finish', () => {
-      console.log('RES >>>', 'sent');
-    });
-    return next();
-  });
-
   server.use('/api', apiRoutes);
 }
 

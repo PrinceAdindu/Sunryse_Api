@@ -19,6 +19,23 @@ function create() {
   // Cross Origin Resource Sharing
   server.use(cors(corsOptions));
 
+  // Log server requests and responses
+  server.use('*', (req, res, next) => {
+    console.log(`REQ <<< ${req.method} ${req.originalUrl}`);
+    res.on('finish', () => {
+      console.log('RES >>>', 'sent');
+    });
+    return next();
+  });
+
+  // Connect webhook routes before middlewares
+  const webhookController = require('./controllers/webhookController');
+  server.use(
+    '/webhook',
+    express.raw({ type: 'application/json' }),
+    webhookController,
+  );
+
   // Built-in middleware for json
   server.use(express.json());
 
