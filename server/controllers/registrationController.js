@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
-
 const { getClinic, createClinic } = require('../services/clinic/clinicService');
-const { createStripeAccount } = require('../services/stripeService');
-const { DEFAULT_CLINIC_DATA } = require('../models/clinicModel');
+const {
+  verifyRegistrationData,
+} = require('../middleware/registration/verifyRegistrationData');
 
-router.post('/clinic', async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.status(400).json({
-      message: 'Email, password are required for registration.',
-    });
+router.post('/clinic', verifyRegistrationData, async (req, res, next) => {
+  console.log('IM HERE', req.body.data);
+  const { email, password } = req.body.data;
 
   try {
     const foundClinic = await getClinic({ email });

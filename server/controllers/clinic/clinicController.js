@@ -6,15 +6,15 @@ const { getClinic } = require('../../services/clinic/clinicService');
 
 router.get('/', async (req, res, next) => {
   const id = req.id;
-  const properties = req.query.properties;
+  const fields = req.query.fields;
   try {
     const clinic = await getClinic({ id });
 
-    // Extract properties from clinic based on req.properties
+    // Extract fields from clinic based on req.field
     const resObj = {};
-    properties.forEach((property) => {
-      if (clinic.hasOwnProperty(property)) {
-        resObj[property] = clinic[property];
+    fields.forEach((f) => {
+      if (clinic.hasOwnProperty(f)) {
+        resObj[f] = clinic[f];
       }
     });
 

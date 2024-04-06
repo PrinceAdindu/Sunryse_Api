@@ -136,7 +136,7 @@ const DEFAULT_BUSINESS_HOURS = [
 ];
 
 const DEFAULT_CLINIC_DATA = {
-  name: '',
+  clinicName: '',
   refreshToken: '',
   schedule: DEFAULT_BUSINESS_HOURS,
   timezone: 'Pacific Time - US & Canada',

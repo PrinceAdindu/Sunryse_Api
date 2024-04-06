@@ -11,6 +11,10 @@ const {
 } = require('firebase/firestore');
 const { getClinic, editClinic } = require('./clinicService');
 const { v4: uuidv4 } = require('uuid');
+const { checkEndpointData } = require('../../utilities/endpointChecks');
+const {
+  NEW_SERVICE_ENDPOINT_RULES,
+} = require('../../middleware/service/verifyNewServiceData');
 
 async function getService(clinicId, serviceId) {
   const allServices = await getAllServices(clinicId);
@@ -46,8 +50,13 @@ async function deleteService(clinicId, serviceId) {
 }
 
 async function editService(clinicId, serviceData) {
-  await deleteService(clinicId, serviceData.id);
-  await createService(clinicId, serviceData);
+  const serviceToUpdate = await getService(clinicId, serviceData.id);
+  const updatedService = { ...serviceToUpdate, ...serviceData };
+  const errors = checkEndpointData(updatedService, NEW_SERVICE_ENDPOINT_RULES);
+  if (errors.length === 0) {
+    await deleteService(clinicId, serviceData.id);
+    await createService(clinicId, updatedService);
+  } else throw new Error({ message: 'Invalid service data provided' });
 }
 
 // async function editStatus(clinicId, serviceId, status) {

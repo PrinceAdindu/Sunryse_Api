@@ -90,6 +90,44 @@ const availabiltyCheck = (availability) => {
   return { passed: true, message: 'Passed' };
 };
 
+const regexCheck = (value, regex) => {
+  if (!regex.test(value)) {
+    return { passed: true, message: 'Passed' };
+  } else {
+    return {
+      passed: false,
+      message: `Minimum length of ${value} not reached`,
+    };
+  }
+};
+
+const equalsCheck = (value, amount) => {
+  if (value === amount) {
+    return { passed: true, message: 'Passed' };
+  } else {
+    return {
+      passed: false,
+      message: `Minimum length of ${amount} not reached`,
+    };
+  }
+};
+
+function checkEndpointData(formData, formRules) {
+  let errors = {};
+
+  for (const field in formData) {
+    const fieldChecks = formRules[field]?.checks;
+    fieldChecks.forEach((check) => {
+      const result = check(formData);
+      if (!result.passed) {
+        errors[field] = result.message;
+      }
+    });
+  }
+
+  return errors;
+}
+
 const EDNPOINT_CHECK_FUNCS = {
   typeCheck: typeCheck,
   requiredCheck: requiredCheck,
@@ -98,6 +136,8 @@ const EDNPOINT_CHECK_FUNCS = {
   maxValueCheck: maxValueCheck,
   minValueCheck: minValueCheck,
   availabiltyCheck: availabiltyCheck,
+  regexCheck: regexCheck,
+  equalsCheck: equalsCheck,
 };
 
-module.exports = { EDNPOINT_CHECK_FUNCS };
+module.exports = { EDNPOINT_CHECK_FUNCS, checkEndpointData };

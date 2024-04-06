@@ -1,23 +1,17 @@
-const { EDNPOINT_CHECK_FUNCS } = require('../../utilities/endpointChecks');
+const {
+  EDNPOINT_CHECK_FUNCS,
+  checkEndpointData,
+} = require('../../utilities/endpointChecks');
 
 const verifyNewServiceData = (req, res, next) => {
   const formData = req.body.data;
-  let errors = {};
-
-  for (const field in formData) {
-    const fieldChecks = NEW_SERVICE_ENDPOINT_RULES[field].checks;
-    fieldChecks?.forEach((check) => {
-      const result = check(formData);
-      if (!result.passed) {
-        errors[field] = result.message;
-      }
-    });
-  }
+  const errors = checkEndpointData(formData, NEW_SERVICE_ENDPOINT_RULES);
 
   if (errors.length > 0) {
-    return res
-      .status(400)
-      .json({ message: 'Request has errors in form data', errors: errors });
+    return res.status(400).json({
+      message: 'New service request has invalid data',
+      errors: errors,
+    });
   }
 
   next();
@@ -122,12 +116,6 @@ const NEW_SERVICE_ENDPOINT_RULES = {
         EDNPOINT_CHECK_FUNCS.typeCheck(formData.availabilityType, 'string'),
       (formData) =>
         EDNPOINT_CHECK_FUNCS.requiredCheck(formData.availabilityType),
-      (formData) =>
-        EDNPOINT_CHECK_FUNCS.requiresIf(
-          formData.availabilityType,
-          formData.availability,
-          'custom',
-        ),
     ],
     options: [
       { value: 'all', label: 'Business Hours' },

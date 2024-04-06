@@ -25,10 +25,11 @@ router.post('/', verifyNewServiceData, async (req, res, next) => {
   }
 });
 
-router.put('/', verifyNewServiceData, async (req, res, next) => {
+router.put('/', async (req, res, next) => {
   const id = req.id;
+  const serviceData = req.body.data;
   try {
-    await editService(id, req.body);
+    await editService(id, serviceData);
     return res.status(200).json({
       message: 'Successfully updated service.',
     });
@@ -42,7 +43,8 @@ router.put('/', verifyNewServiceData, async (req, res, next) => {
 
 router.delete('/', async (req, res, next) => {
   const id = req.id;
-  const serviceId = req.body.id;
+  console.log(req.body);
+  const serviceId = req.body.data.id;
   try {
     await deleteService(id, serviceId);
     return res.status(200).json({
