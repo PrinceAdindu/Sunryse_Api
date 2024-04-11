@@ -6,8 +6,8 @@ const {
 const verifyNewServiceData = (req, res, next) => {
   const formData = req.body.data;
   const errors = checkEndpointData(formData, NEW_SERVICE_ENDPOINT_RULES);
-
-  if (errors.length > 0) {
+  console.log(errors);
+  if (Object.keys(errors).length > 0) {
     return res.status(400).json({
       message: 'New service request has invalid data',
       errors: errors,
@@ -20,47 +20,43 @@ const verifyNewServiceData = (req, res, next) => {
 const NEW_SERVICE_ENDPOINT_RULES = {
   id: {
     type: 'string',
-    required: false,
   },
   status: {
     type: 'boolean',
-    required: false,
   },
   name: {
     type: 'string',
-    required: true,
+    required: (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.name),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.name, 'string'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.name),
       (formData) => EDNPOINT_CHECK_FUNCS.maxLengthCheck(formData.name, 100),
     ],
   },
   description: {
     type: 'string',
-    required: true,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(formData.description),
     checks: [
       (formData) =>
         EDNPOINT_CHECK_FUNCS.typeCheck(formData.description, 'string'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.description),
       (formData) =>
         EDNPOINT_CHECK_FUNCS.maxLengthCheck(formData.description, 500),
     ],
   },
   duration: {
     type: 'number',
-    required: true,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(formData.duration),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.duration, 'number'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.duration),
       (formData) => EDNPOINT_CHECK_FUNCS.minValueCheck(formData.duration, 0),
     ],
   },
   price: {
     type: 'number',
-    required: true,
+    required: (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.price),
     checks: [
-      (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.number, 'number'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.price),
+      (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.price, 'number'),
       (formData) => EDNPOINT_CHECK_FUNCS.minValueCheck(formData.price, 0),
     ],
   },
@@ -70,10 +66,9 @@ const NEW_SERVICE_ENDPOINT_RULES = {
   },
   tax: {
     type: 'string',
-    required: true,
+    required: (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.tax),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.tax, 'string'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.tax),
     ],
     options: [
       { value: 'none', label: 'None' },
@@ -84,23 +79,25 @@ const NEW_SERVICE_ENDPOINT_RULES = {
   },
   taxPercent: {
     type: 'number',
-    required: false,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(
+        formData.taxPercent,
+        formData.tax,
+        ['gst, hst, pst'],
+        true,
+      ),
     checks: [
       (formData) =>
         EDNPOINT_CHECK_FUNCS.typeCheck(formData.taxPercent, 'number'),
-      (formData) =>
-        EDNPOINT_CHECK_FUNCS.requiredCheck(formData.taxPercent, formData.tax, [
-          'gst, hst, pst',
-        ]),
       (formData) => EDNPOINT_CHECK_FUNCS.minValueCheck(formData.taxPercent, 0),
     ],
   },
   location: {
     type: 'string',
-    required: true,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(formData.location),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.location, 'string'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.location),
     ],
     options: [
       { value: 'virtual', label: 'Virtual' },
@@ -110,12 +107,11 @@ const NEW_SERVICE_ENDPOINT_RULES = {
   },
   availabilityType: {
     type: 'string',
-    required: true,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(formData.availabilityType),
     checks: [
       (formData) =>
         EDNPOINT_CHECK_FUNCS.typeCheck(formData.availabilityType, 'string'),
-      (formData) =>
-        EDNPOINT_CHECK_FUNCS.requiredCheck(formData.availabilityType),
     ],
     options: [
       { value: 'all', label: 'Business Hours' },
@@ -123,30 +119,29 @@ const NEW_SERVICE_ENDPOINT_RULES = {
       { value: 'none', label: 'None' },
     ],
   },
-  availability: {
+  customAvailability: {
     type: 'object',
-    required: false,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(
+        formData.customAvailability,
+        formData.availabilityType,
+        'custom',
+        false,
+      ),
     checks: [
       (formData) =>
-        EDNPOINT_CHECK_FUNCS.typeCheck(formData.availability, 'object'),
+        EDNPOINT_CHECK_FUNCS.typeCheck(formData.customAvailability, 'object'),
       (formData) =>
-        EDNPOINT_CHECK_FUNCS.requiredCheck(
-          formData.availability,
-          formData.availabilityType,
-          'custom',
-        ),
+        EDNPOINT_CHECK_FUNCS.minLengthCheck(formData.customAvailability, 1),
       (formData) =>
-        EDNPOINT_CHECK_FUNCS.minLengthCheck(formData.availability, 1),
-      (formData) =>
-        EDNPOINT_CHECK_FUNCS.availabiltyCheck(formData.availability),
+        EDNPOINT_CHECK_FUNCS.availabiltyCheck(formData.customAvailability),
     ],
   },
   policy: {
     type: 'string',
-    required: true,
+    required: (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.policy),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.policy, 'string'),
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.policy),
     ],
     options: [
       { value: 'anytime', label: 'Cancel Anytime' },
@@ -156,15 +151,15 @@ const NEW_SERVICE_ENDPOINT_RULES = {
   },
   notice: {
     type: 'string',
-    required: false,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(
+        formData.notice,
+        formData.policy,
+        'notice',
+        false,
+      ),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.notice, 'string'),
-      (formData) =>
-        EDNPOINT_CHECK_FUNCS.requiredCheck(
-          formData.notice,
-          formData.policy,
-          'notice',
-        ),
     ],
     options: [
       { value: '12', label: '12 hours' },
@@ -174,15 +169,15 @@ const NEW_SERVICE_ENDPOINT_RULES = {
   },
   lateFee: {
     type: 'number',
-    required: false,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(
+        formData.lateFee,
+        formData.policy,
+        'notice',
+        false,
+      ),
     checks: [
       (formData) => EDNPOINT_CHECK_FUNCS.typeCheck(formData.lateFee, 'number'),
-      (formData) =>
-        EDNPOINT_CHECK_FUNCS.requiredCheck(
-          formData.lateFee,
-          formData.policy,
-          'notice',
-        ),
     ],
   },
 };

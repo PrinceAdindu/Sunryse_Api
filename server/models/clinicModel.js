@@ -73,7 +73,7 @@ const ClinicModel {
       description: string;
       duration: string;
       availabilityType: string;
-      availability: [
+      customAvailability: [
         {
           day: string;
           times: [

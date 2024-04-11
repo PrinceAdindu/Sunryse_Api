@@ -43,8 +43,7 @@ router.put('/', async (req, res, next) => {
 
 router.delete('/', async (req, res, next) => {
   const id = req.id;
-  console.log(req.body);
-  const serviceId = req.body.data.id;
+  const serviceId = req.body.id;
   try {
     await deleteService(id, serviceId);
     return res.status(200).json({

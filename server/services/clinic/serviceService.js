@@ -32,6 +32,7 @@ async function createService(clinicId, serviceData) {
     id: uuidv4(),
     status: true,
     currency: 'CAD',
+    createdAt: Date(),
   };
   const newServiceData = { ...defualtFields, ...serviceData };
   const services = await getAllServices(clinicId);
@@ -42,33 +43,27 @@ async function createService(clinicId, serviceData) {
 
 async function deleteService(clinicId, serviceId) {
   const services = await getAllServices(clinicId);
-  const updatedServices = services.filter((s) => {
-    s.id !== serviceId;
-  });
+  const updatedServices = services.filter((svc) => svc.id !== serviceId);
   const data = { services: updatedServices };
   await editClinic(clinicId, data);
 }
 
 async function editService(clinicId, serviceData) {
-  const serviceToUpdate = await getService(clinicId, serviceData.id);
-  const updatedService = { ...serviceToUpdate, ...serviceData };
-  const errors = checkEndpointData(updatedService, NEW_SERVICE_ENDPOINT_RULES);
-  if (errors.length === 0) {
-    await deleteService(clinicId, serviceData.id);
-    await createService(clinicId, updatedService);
+  let editedService = {};
+  const services = await getAllServices(clinicId);
+  const updatedServices = services.map((svc) => {
+    if (svc.id === serviceData.id) {
+      editedService = { ...svc, ...serviceData };
+      return editedService;
+    }
+    return svc;
+  });
+  const errors = checkEndpointData(editedService, NEW_SERVICE_ENDPOINT_RULES);
+  if (Object.keys(errors).length === 0) {
+    const data = { services: updatedServices };
+    await editClinic(clinicId, data);
   } else throw new Error({ message: 'Invalid service data provided' });
 }
-
-// async function editStatus(clinicId, serviceId, status) {
-//   const services = await getAllServices(clinicId);
-//   const updatedServices = services.map((s) => {
-//     if (s.id === serviceId) {
-//       return { ...s, status: status };
-//     }
-//   });
-//   const data = { services: updatedServices };
-//   await editClinic(clinicId, data);
-// }
 
 module.exports = {
   createService,
@@ -77,3 +72,11 @@ module.exports = {
   deleteService,
   editService,
 };
+
+// const serviceToUpdate = await getService(clinicId, serviceData.id);
+// const updatedService = { ...serviceToUpdate, ...serviceData };
+// const errors = checkEndpointData(updatedService, NEW_SERVICE_ENDPOINT_RULES);
+// if (Object.keys(errors).length === 0) {
+//   await deleteService(clinicId, serviceData.id);
+//   await createService(clinicId, updatedService);
+// } else throw new Error({ message: 'Invalid service data provided' });

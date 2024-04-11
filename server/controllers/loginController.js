@@ -35,6 +35,7 @@ router.post('/', async (req, res, next) => {
         .status(401)
         .json({ message: 'Unauthorized, Incorrect password' }); // Unauthorized
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: 'Error unhashing password' });
   }
 
