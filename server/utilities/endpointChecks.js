@@ -130,14 +130,14 @@ function checkEndpointData(formData, formRules) {
   for (const field in formData) {
     const fieldRules = formRules[field];
     // Run requirement check first
-    // if (fieldRules?.required) {
-    //   const func = fieldRules?.required;
-    //   const result = func(formData);
-    //   if (!result.passed) {
-    //     errors[field] = result.message;
-    //     return errors;
-    //   }
-    // }
+    if (fieldRules?.required) {
+      const func = fieldRules?.required;
+      const result = func(formData);
+      if (!result.passed) {
+        errors[field] = result.message;
+        return errors;
+      }
+    }
     // Run field checks if field exists
     if (Boolean(formData[field])) {
       const fieldChecks = fieldRules?.checks;

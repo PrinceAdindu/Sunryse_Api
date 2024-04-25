@@ -20,9 +20,8 @@ const verifyResetPasswordData = (req, res, next) => {
 const RESET_PASSWORD_ENDPOINT_RULES = {
   email: {
     type: 'string',
-    required: true,
+    required: (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.email),
     checks: [
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.email),
       (formData) =>
         EDNPOINT_CHECK_FUNCS.regexCheck(
           formData.email,
@@ -32,17 +31,17 @@ const RESET_PASSWORD_ENDPOINT_RULES = {
   },
   password: {
     type: 'string',
-    required: true,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(formData.password),
     checks: [
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.password),
       (formData) => EDNPOINT_CHECK_FUNCS.minLengthCheck(formData.password, 8),
     ],
   },
   passwordConf: {
     type: 'string',
-    required: true,
+    required: (formData) =>
+      EDNPOINT_CHECK_FUNCS.requiredCheck(formData.passwordConf),
     checks: [
-      (formData) => EDNPOINT_CHECK_FUNCS.requiredCheck(formData.passwordConf),
       (formData) =>
         EDNPOINT_CHECK_FUNCS.minLengthCheck(formData.passwordConf, 8),
       (formData) =>
