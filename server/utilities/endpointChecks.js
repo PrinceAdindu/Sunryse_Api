@@ -6,10 +6,10 @@ const requiredCheck = (
 ) => {
   // Check if dependancy exists
   if (dependantValue) {
-    // Check if dependancy failed
     const dependencyPassed = Array.isArray(requiredDependantValue)
       ? requiredDependantValue.includes(dependantValue)
       : dependantValue === requiredDependantValue;
+    // Check if dependancy failed
     if (!dependencyPassed) {
       // Check if field exists
       if (Boolean(value)) {
@@ -91,8 +91,8 @@ const minValueCheck = (value, amount) => {
   }
 };
 
-const equalsCheck = (value, amount) => {
-  if (value === amount) {
+const equalsCheck = (value, requiredValue) => {
+  if (value === requiredValue) {
     return { passed: true, message: 'Passed equals check' };
   } else {
     return {
