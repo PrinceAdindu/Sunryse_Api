@@ -6,7 +6,6 @@ const {
 } = require('../middleware/registration/verifyRegistrationData');
 
 router.post('/clinic', verifyRegistrationData, async (req, res, next) => {
-  console.log('IM HERE', req.body.data);
   const { email, password } = req.body.data;
 
   try {

@@ -6,7 +6,6 @@ const {
 const verifyNewServiceData = (req, res, next) => {
   const formData = req.body.data;
   const errors = checkEndpointData(formData, NEW_SERVICE_ENDPOINT_RULES);
-  console.log(errors);
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({
       message: 'New service request has invalid data',
