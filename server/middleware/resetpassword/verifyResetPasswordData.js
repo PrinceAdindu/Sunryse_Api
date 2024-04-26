@@ -17,6 +17,22 @@ const verifyResetPasswordData = (req, res, next) => {
   next();
 };
 
+const verifyEmailData = (req, res, next) => {
+  const formData = req.body.data;
+  const errors = checkEndpointData(
+    formData,
+    RESET_PASSWORD_ENDPOINT_RULES.email,
+  );
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: 'invalid email format',
+      errors: errors,
+    });
+  }
+
+  next();
+};
+
 const RESET_PASSWORD_ENDPOINT_RULES = {
   email: {
     type: 'string',
@@ -55,5 +71,6 @@ const RESET_PASSWORD_ENDPOINT_RULES = {
 
 module.exports = {
   verifyResetPasswordData,
+  verifyEmailData,
   RESET_PASSWORD_ENDPOINT_RULES,
 };
