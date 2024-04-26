@@ -11,7 +11,7 @@ const verifyAccessToken = require('../../middleware/verifyAccessToken');
 
 router.use('/login', loginController);
 router.use('/register', registrationController);
-router.use('/resetpassword', resetPasswordController);
+router.use('/resetPassword', resetPasswordController);
 
 router.use('/logout', verifyAccessToken, logoutController);
 router.use('/clinic', verifyAccessToken, clinicController);

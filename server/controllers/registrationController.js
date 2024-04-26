@@ -5,7 +5,7 @@ const {
   verifyRegistrationData,
 } = require('../middleware/registration/verifyRegistrationData');
 
-router.post('/clinic', verifyRegistrationData, async (req, res, next) => {
+router.post('/', verifyRegistrationData, async (req, res, next) => {
   const { email, password } = req.body.data;
 
   try {
