@@ -41,11 +41,11 @@ router.post('/email', verifyEmailData, async (req, res) => {
   let isEmailFound;
   try {
     isEmailFound = await getClinic({ email });
-    if (isEmailFound) isEmailFound = true;
+    if (isEmailFound) isEmailFound = Boolean(isEmailFound);
     else isEmailFound = false;
 
     return res.status(200).json({
-      message: `Email has ${!isEmailFound && 'Not'} Found`,
+      message: `Email was ${!isEmailFound && 'Not'} Found`,
       isEmailFound,
     });
   } catch (err) {
