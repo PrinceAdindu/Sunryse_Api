@@ -43,7 +43,7 @@ async function loadTemplate(templatePath, context) {
   try {
     html = await getHTML(path.join(templatePath, 'body.html'), context);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     throw new Error('Error making template');
   }
   return { html, text, subject };

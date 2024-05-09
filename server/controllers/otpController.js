@@ -17,6 +17,7 @@ router.post('/', async (req, res, next) => {
     if (!foundClinic)
       return res.status(401).json({ message: 'Clinic does not exist' }); // Unauthorized
   } catch (error) {
+    console.log(err);
     return res.status(500).json({ message: 'Error finding matching clinic' });
   }
 
@@ -56,6 +57,7 @@ router.post('/verify', async (req, res, next) => {
     if (!foundClinic)
       return res.status(401).json({ message: 'Clinic does not exist' }); // Unauthorized
   } catch (error) {
+    console.log(err);
     return res.status(500).json({ message: 'Error finding matching clinic' });
   }
 
