@@ -20,6 +20,11 @@ const dev = {
   stripeWebhookSecret: process.env.DEV_STRIPE_WEBHOOK_SECRET,
   stripeAccountLinkRefreshUrl: process.env.DEV_STRIPE_ACCOUNT_LINK_REFRESH_URL,
   stripeAccountLinkReturnUrl: process.env.DEV_STRIPE_ACCOUNT_LINK_RETURN_URL,
+  emailHost: process.env.DEV_EMAIL_HOST,
+  emailPort: process.env.DEV_EMAIL_PORT,
+  email: process.env.DEV_EMAIL,
+  emailPassword: process.env.DEV_EMAIL_PASSWORD,
+  emailSenderName: process.env.DEV_EMAIL_SENDER_NAME,
 };
 
 const prod = {

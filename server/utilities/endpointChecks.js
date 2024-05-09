@@ -132,7 +132,9 @@ function checkEndpointData(formData, formRules) {
     // Run requirement check first
     if (fieldRules?.required) {
       const func = fieldRules?.required;
+      console.log(field, func);
       const result = func(formData);
+      console.log(result);
       if (!result.passed) {
         errors[field] = result.message;
         return errors;
