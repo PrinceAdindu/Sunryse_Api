@@ -59,7 +59,6 @@ router.post('/verify', async (req, res, next) => {
     return res.status(500).json({ message: 'Error finding matching clinic' });
   }
 
-  console.log(foundClinic);
   const isVerified = foundClinic.otp === code;
   if (isVerified) {
     return res
