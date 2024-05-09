@@ -1,6 +1,7 @@
 /* 
 const ClinicModel {
   userId: string;
+  otpCode: number,
   clinicName: string,
   stripeId: string;
   email: string;

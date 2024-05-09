@@ -83,7 +83,7 @@ const NEW_SERVICE_ENDPOINT_RULES = {
         formData.taxPercent,
         formData.tax,
         ['gst, hst, pst'],
-        true,
+        false,
       ),
     checks: [
       (formData) =>

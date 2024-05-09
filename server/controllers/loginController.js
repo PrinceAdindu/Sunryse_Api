@@ -25,6 +25,7 @@ router.post('/', async (req, res, next) => {
     if (!foundClinic)
       return res.status(401).json({ message: 'Clinic does not exist' }); // Unauthorized
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: 'Error finding matching clinic' });
   }
 
@@ -75,6 +76,7 @@ router.post('/refresh', async (req, res, next) => {
         .status(403)
         .json({ message: 'Forbidden, refresh token does not exist' }); // Forbidden
   } catch (err) {
+    console.log(err);
     return res
       .status(500)
       .json({ message: 'Error finding matching refresh token' });
@@ -88,6 +90,7 @@ router.post('/refresh', async (req, res, next) => {
         .status(403)
         .json({ message: 'Forbidden, refresh token is not valid' }); // Forbidden
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: 'Error verifying refresh token' });
   }
   const accessToken = createAccessToken(tokenBody);
