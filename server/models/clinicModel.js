@@ -145,6 +145,10 @@ const DEFAULT_CLINIC_DATA = {
     url: '',
     status: '',
   },
+  otp: {
+    code: null,
+    expirationTime: '',
+  },
   services: [
     {
       name: 'Free Consultation',
