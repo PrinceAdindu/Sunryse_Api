@@ -25,6 +25,7 @@ const dev = {
   email: process.env.DEV_EMAIL,
   emailPassword: process.env.DEV_EMAIL_PASSWORD,
   emailSenderName: process.env.DEV_EMAIL_SENDER_NAME,
+  otpExpirationMinutes: process.env.DEV_OTP_EXPIRATION_MINUTES,
 };
 
 const prod = {
