@@ -71,14 +71,13 @@ router.post('/verify', async (req, res, next) => {
 
   const { code: otp, expirationTime = '' } = foundClinic?.otp;
   const isVerified = otp === code;
-  const isExpired = expirationTime.toDate() > new Date();
+  const isExpired = expirationTime.toDate() < new Date();
 
-  if (isVerified && isExpired) {
+  if (isVerified && !isExpired) {
     return res
       .status(200)
       .json({ isVerified: true, message: 'Successfully verified account' });
-  } else if (!isExpired) {
-    console.log('expired if clause');
+  } else if (isExpired) {
     return res
       .status(401)
       .json({ isVerified: false, message: 'Otp Code expired, Resend again.' });
