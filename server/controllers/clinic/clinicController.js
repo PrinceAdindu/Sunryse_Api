@@ -3,8 +3,9 @@ const router = express.Router();
 const scheduleController = require('./scheduleController');
 const serviceController = require('./service/serviceController');
 const { getClinic } = require('../../services/clinic/clinicService');
+const verifyAccessToken = require('../../middleware/verifyAccessToken');
 
-router.get('/', async (req, res, next) => {
+router.get('/', verifyAccessToken, async (req, res, next) => {
   const id = req.id;
   const fields = req.query.fields;
   try {

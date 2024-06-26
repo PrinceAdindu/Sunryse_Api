@@ -141,6 +141,14 @@ const DEFAULT_CLINIC_DATA = {
   refreshToken: '',
   schedule: DEFAULT_BUSINESS_HOURS,
   timezone: 'Pacific Time - US & Canada',
+  directory: {
+    url: '',
+    status: '',
+  },
+  otp: {
+    code: null,
+    expirationTime: '',
+  },
   services: [
     {
       name: 'Free Consultation',
