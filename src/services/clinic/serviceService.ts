@@ -1,14 +1,3 @@
-import db from "../../firebase/firebaseSetup";
-import {
-  collection,
-  query,
-  where,
-  doc,
-  setDoc,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
 import {getClinic, editClinic} from "./clinicService.js";
 import {v4 as uuidv4} from "uuid";
 
