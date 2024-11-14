@@ -1,25 +1,25 @@
 import {Router} from "express";
 import {
-  createService,
-  deleteService,
-  editService,
+  createOffering,
+  deleteOffering,
+  editOffering,
 } from "../../../services/clinic/serviceService";
-import {verifyNewServiceData} from "../../../middleware/service/verifyNewServiceData";
+import {verifyNewOfferingData} from "../../../middleware/clinic/newOffering/verifyNewOfferingData";
 
 const router = Router();
 
-router.post("/", verifyNewServiceData, async (req, res, next) => {
+router.post("/", verifyNewOfferingData, async (req, res, next) => {
   const id = req.id;
   const serviceData = req.body.data;
   try {
-    await createService(id, serviceData);
+    await createOffering(id, serviceData);
     return res.status(200).json({
-      message: "Successfully created new service.",
+      message: "Successfully created new offering.",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Error creating new service.",
+      message: "Error creating new offering.",
     });
   }
 });
@@ -28,14 +28,14 @@ router.put("/", async (req, res, next) => {
   const id = req.id;
   const serviceData = req.body.data;
   try {
-    await editService(id, serviceData);
+    await editOffering(id, serviceData);
     return res.status(200).json({
       message: "Successfully updated service.",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Error updating service.",
+      message: "Error updating offering.",
     });
   }
 });
@@ -44,14 +44,14 @@ router.delete("/", async (req, res, next) => {
   const id = req.id;
   const serviceId = req.body.id;
   try {
-    await deleteService(id, serviceId);
+    await deleteOffering(id, serviceId);
     return res.status(200).json({
-      message: "Successfully deleted new service.",
+      message: "Successfully deleted new offering.",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Error deleting new service.",
+      message: "Error deleting new offering.",
     });
   }
 });

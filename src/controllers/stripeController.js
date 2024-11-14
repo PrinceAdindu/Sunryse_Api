@@ -1,6 +1,6 @@
 import {Router} from "express";
 
-import {getClinic} from "../services/clinic/clinicService";
+import {getClinic} from "../services/clinic/clinicService.js";
 import {
   createAccountLink,
   createDahsboardLink,

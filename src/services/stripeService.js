@@ -1,6 +1,6 @@
 import config from "../config";
 import stripe from "stripe";
-import {archiveClinic} from "./clinic/clinicService";
+import {archiveClinic} from "./clinic/clinicService.js";
 
 export async function createStripeAccount(email) {
   const account = await stripe.accounts.create({

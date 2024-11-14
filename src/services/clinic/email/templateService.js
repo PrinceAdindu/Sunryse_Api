@@ -1,7 +1,7 @@
-import {readFileSync} from "fs";
-import {render} from "mustache";
-import {join} from "path";
-import {juiceFile} from "juice";
+import readFileSync from "fs";
+import render from "mustache";
+import join from "path";
+import juiceFile from "juice";
 
 const getSubject = (subjectPath, context) => {
   const subject = readFileSync(subjectPath, {

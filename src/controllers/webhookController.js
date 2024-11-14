@@ -1,6 +1,6 @@
 import {Router, raw} from "express";
 
-import {getClinic, archiveClinic} from "../services/clinic/clinicService";
+import {getClinic, archiveClinic} from "../services/clinic/clinicService.js";
 import config from "../config";
 
 import stripe from "stripe";

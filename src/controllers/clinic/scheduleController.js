@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {editClinic} from "../../services/clinic/clinicService";
+import {editClinic} from "../../services/clinic/clinicService.js";
 
 const router = Router();
 

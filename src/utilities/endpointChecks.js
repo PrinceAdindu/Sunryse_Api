@@ -1,3 +1,31 @@
+export default function checkEndpointData(formData, formRules) {
+  let errors = {};
+
+  for (const field in formData) {
+    const fieldRules = formRules[field];
+    // Run requirement check first
+    if (fieldRules?.required) {
+      const func = fieldRules?.required;
+      const result = func(formData);
+      if (!result.passed) {
+        errors[field] = result.message;
+        return errors;
+      }
+    }
+    // Run field checks if field exists
+    if (Boolean(formData[field])) {
+      const fieldChecks = fieldRules?.checks;
+      fieldChecks?.forEach((check) => {
+        const result = check(formData);
+        if (!result.passed) {
+          errors[field] = result.message;
+        }
+      });
+    }
+  }
+  return errors;
+}
+
 const requiredCheck = (
   value,
   dependantValue = "",
@@ -123,34 +151,6 @@ const availabiltyCheck = (availability) => {
   });
   return {passed: true, message: "Passed availability check"};
 };
-
-export default function checkEndpointData(formData, formRules) {
-  let errors = {};
-
-  for (const field in formData) {
-    const fieldRules = formRules[field];
-    // Run requirement check first
-    if (fieldRules?.required) {
-      const func = fieldRules?.required;
-      const result = func(formData);
-      if (!result.passed) {
-        errors[field] = result.message;
-        return errors;
-      }
-    }
-    // Run field checks if field exists
-    if (Boolean(formData[field])) {
-      const fieldChecks = fieldRules?.checks;
-      fieldChecks?.forEach((check) => {
-        const result = check(formData);
-        if (!result.passed) {
-          errors[field] = result.message;
-        }
-      });
-    }
-  }
-  return errors;
-}
 
 export const ENDPOINT_CHECK_FUNCS = {
   requiredCheck,

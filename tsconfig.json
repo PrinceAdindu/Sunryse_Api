@@ -1,29 +1,29 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // Updated to a more recent version for Node.js support
-    "module": "CommonJS", // Use CommonJS modules, which is the standard for Node.js
-    "lib": ["ES2020"], // Use ES2020 library, adjust based on Node.js version
-    "allowJs": true, // Allow JavaScript files to be compiled (if needed)
-    "skipLibCheck": true, // Skip type checking of all declaration files
-    "esModuleInterop": true, // Enables compatibility with CommonJS modules
-    "allowSyntheticDefaultImports": true, // Allows default imports from modules with no default export
-    "strict": true, // Enable all strict type checking options
-    "forceConsistentCasingInFileNames": true, // Ensure consistent casing of file names
-    "moduleResolution": "node", // Resolve modules using Node.js style
-    "resolveJsonModule": true, // Allows importing JSON files
-    "noEmit": true, // Do not emit output (only type checking)
-    "sourceMap": true, // Generate corresponding .map files for debugging
-    "declaration": false, // Do not generate declaration files (usually not needed for server-side code)
-    "noUnusedLocals": true, // Report errors on unused locals
-    "noUnusedParameters": true, // Report errors on unused parameters
-    "incremental": true, // Enable incremental compilation
-    "noFallthroughCasesInSwitch": true // Report errors for fallthrough cases in switch statements
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "incremental": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src" // Files to type check
-  ],
-  "exclude": [
-    "node_modules", // Exclude node_modules
-    "dist" // Exclude the output directory
-  ]
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

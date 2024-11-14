@@ -1,7 +1,7 @@
 import {createTransport} from "nodemailer";
 
 import config from "../../../config";
-import {loadTemplate} from "./templateService";
+import loadTemplate from "./templateService";
 
 const getTemplate = async (path, context) => {
   const email = await loadTemplate(path, context);
