@@ -1,4 +1,5 @@
 import {loginDocs} from "./auth/loginDocs"; // Import docs from the 'docs' folder
+import {otpDocs} from "./auth/otpDocs";
 import {clinicDocs} from "./clinic/clinicDocs";
 
 export const swaggerConfig = {
@@ -10,6 +11,7 @@ export const swaggerConfig = {
   },
   paths: {
     ...loginDocs,
+    ...otpDocs,
     ...clinicDocs,
   },
 };

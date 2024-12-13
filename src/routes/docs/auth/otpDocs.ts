@@ -1,10 +1,10 @@
 import {responseDict} from "../../../utilities/responsesDictionary";
 import {errorResponseDocs} from "../error/errorResponseDocs";
 
-export const loginDocs = {
-  "/api/auth/login": {
+export const otpDocs = {
+  "/api/auth/otp": {
     post: {
-      summary: "Login to recieve access and refresh tokens",
+      summary: "Send one time password to exisitng email",
       tags: ["auth"],
       requestBody: {
         content: {
@@ -13,9 +13,8 @@ export const loginDocs = {
               type: "object",
               properties: {
                 email: {type: "string", example: "test@gmail.com"},
-                password: {type: "string", example: "12345678"},
               },
-              required: ["email", "password"],
+              required: ["email"],
             },
           },
         },
@@ -28,13 +27,7 @@ export const loginDocs = {
               schema: {
                 type: "object",
                 properties: {
-                  message: {type: "string", example: "Login Successful"},
-                  data: {
-                    type: "object",
-                    properties: {
-                      accessToken: {type: "string", example: "2D4793HBDUIWE"},
-                    },
-                  },
+                  message: {type: "string", example: "Successfully sent otp"},
                 },
               },
             },
@@ -50,6 +43,14 @@ export const loginDocs = {
         },
         [responseDict.unauthRequest.code]: {
           description: responseDict.unauthRequest.name,
+          content: {
+            "application/json": {
+              schema: errorResponseDocs,
+            },
+          },
+        },
+        [responseDict.forbidden.code]: {
+          description: responseDict.forbidden.name,
           content: {
             "application/json": {
               schema: errorResponseDocs,
@@ -76,23 +77,24 @@ export const loginDocs = {
     },
   },
 
-  "/api/auth/login/refresh": {
+  "/api/auth/otp/verify": {
     post: {
-      summary: "Validate refresh token to recieve new access token",
+      summary: "Verify one time password",
       tags: ["auth"],
-      parameters: [
-        {
-          name: "Cookie",
-          in: "header",
-          description:
-            "Must include a valid cookie containing a valid refresh token",
-          required: true,
-          schema: {
-            type: "string",
-            example: "<cookiename>=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      requestBody: {
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                email: {type: "string", example: "test@gmail.com"},
+                code: {type: "number", example: 1234},
+              },
+              required: ["email", "code"],
+            },
           },
         },
-      ],
+      },
       responses: {
         [responseDict.success.code]: {
           description: responseDict.success.name,
@@ -101,12 +103,9 @@ export const loginDocs = {
               schema: {
                 type: "object",
                 properties: {
-                  message: {type: "string", example: "Login Successful"},
-                  data: {
-                    type: "object",
-                    properties: {
-                      accessToken: {type: "string", example: "2D4793HBDUIWE"},
-                    },
+                  message: {
+                    type: "string",
+                    example: "Successfully verified otp",
                   },
                 },
               },

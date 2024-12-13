@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 import {newCustomError} from "../middleware/error/CustomError";
 import {responseDict} from "../utilities/responsesDictionary";
-import {AuthTokenData} from "../middleware/auth/AuthTokenData";
+import {AuthTokenData} from "../middleware/token/AuthTokenData";
 
 export const createAccessToken = (data: Object) => {
   try {
@@ -20,7 +20,7 @@ export const createAccessToken = (data: Object) => {
   }
 };
 
-export const createRefreshToken = (data: Object) => {
+export const createRefreshToken = (data: AuthTokenData) => {
   try {
     const refreshToken = jwt.sign(data, config.refreshTokenSecret, {
       expiresIn: config.refreshTokenExp,

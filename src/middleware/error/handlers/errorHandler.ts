@@ -1,13 +1,14 @@
-import {Response, Request, NextFunction, ErrorRequestHandler} from "express";
-import config from "../../../config";
-import {CustomError} from "../CustomError";
-import {logError} from "../../logger/logger";
 import {ZodIssue} from "zod";
+import {Response, Request, NextFunction, ErrorRequestHandler} from "express";
+
+import {AuthenticatedRequest} from "../../token/AuthenticatedRequest";
 import {responseDict} from "../../../utilities/responsesDictionary";
-import {AuthenticatedRequest} from "../../auth/AuthenticatedRequest";
+import {logError} from "../../logger/logger";
+import {CustomError} from "../CustomError";
+import config from "../../../config";
 
 export type ErrorBody = {
-  status: number;
+  code: number;
   name: string;
   message: string;
   request: string;
@@ -52,7 +53,7 @@ function buildErrorResponseBody<T extends Request | AuthenticatedRequest>(
   const clinicId = getClinicId(req);
 
   const body: ErrorBody = {
-    status: statusCode,
+    code: statusCode,
     name: error.name,
     message: message,
     request: `${req.method} ${req.originalUrl}`,
@@ -71,8 +72,10 @@ export const errorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  const errorResponseBody = buildErrorResponseBody(error, req);
-  logError(errorResponseBody);
-  res.status(errorResponseBody.status).json(errorResponseBody);
+  const errorBody = buildErrorResponseBody(error, req);
+  if (error instanceof CustomError && !error.operational) {
+    logError(errorBody);
+  }
+  res.status(errorBody.code).json(errorBody);
   next();
 };

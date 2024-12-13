@@ -9,7 +9,7 @@ type ConfigType = {
   refreshTokenSecret: string;
   refreshTokenExp: string;
   refreshCookieExp: string;
-  otpExp: string;
+  otpExpiration: string;
 
   fbPrivateKeyId: string;
   fbPrivateKey: string;
@@ -56,7 +56,7 @@ const dev: ConfigType = {
   refreshTokenSecret: process.env.DEV_REFRESH_TOKEN_SECRET || "",
   refreshTokenExp: process.env.DEV_REFRESH_TOKEN_EXP || "",
   refreshCookieExp: process.env.DEV_REFRESH_COOKIE_EXP || "",
-  otpExp: process.env.DEV_OTP_EXP || "",
+  otpExpiration: process.env.DEV_OTP_EXP || "",
 
   fbPrivateKeyId: process.env.DEV_FB_PRIVATE_KEY_ID || "",
   fbPrivateKey: process.env.DEV_FB_PRIVATE_KEY || "",
@@ -106,7 +106,7 @@ const prod: ConfigType = {
   refreshTokenSecret: process.env.PROD_REFRESH_TOKEN_SECRET || "",
   refreshTokenExp: process.env.PROD_REFRESH_TOKEN_EXP || "",
   refreshCookieExp: process.env.PROD_REFRESH_COOKIE_EXP || "",
-  otpExp: process.env.PROD_OTP_EXP || "",
+  otpExpiration: process.env.PROD_OTP_EXP || "",
 
   fbPrivateKeyId: process.env.PROD_FB_PRIVATE_KEY_ID || "",
   fbPrivateKey: process.env.PROD_FB_PRIVATE_KEY || "",

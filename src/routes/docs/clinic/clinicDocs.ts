@@ -1,5 +1,5 @@
 import {responseDict} from "../../../utilities/responsesDictionary";
-import {errorResponseDocs} from "../errorResponseDocs";
+import {errorResponseDocs} from "../error/errorResponseDocs";
 
 export const clinicDocs = {
   "/api/clinic": {

@@ -3,7 +3,7 @@ import authController from "../../controllers/auth/authController";
 import clinicController from "../../controllers/clinic/clinicController";
 import stripeController from "../../controllers/stripeController";
 import testController from "../../controllers/testController";
-import verifyAccessToken from "../../middleware/auth/verifyAccessToken";
+import verifyAccessToken from "../../middleware/token/verifyAccessToken";
 
 const router = Router();
 

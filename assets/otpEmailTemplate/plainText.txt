@@ -1,0 +1,15 @@
+Hello,
+
+Enter the 6-digit code below to verify your identity and gain access to your Sunryse account.
+
+{{code}}
+
+Thanks for helping us keep your account secure.
+
+The Sunryse Team
+
+Sunryse will never email you and ask you to disclose or verify
+your password, credit card, or banking account number. If you
+receive a suspicious email with a link to update your account
+information, do not click on the link. Instead, report the e-mail
+to Sunryse for investigation.

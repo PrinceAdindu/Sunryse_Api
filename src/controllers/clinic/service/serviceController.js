@@ -4,11 +4,11 @@ import {
   deleteOffering,
   editOffering,
 } from "../../../services/clinic/serviceService";
-import {verifyNewOfferingData} from "../../../middleware/clinic/newOffering/verifyNewOfferingData";
+// import {verifyNewOfferingData} from "../../../middleware/clinic/newOffering/verifyNewOfferingData";
 
 const router = Router();
 
-router.post("/", verifyNewOfferingData, async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   const id = req.id;
   const serviceData = req.body.data;
   try {

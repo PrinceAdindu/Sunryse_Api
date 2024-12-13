@@ -1,12 +1,12 @@
 import {z} from "zod";
 import {Request, Response, NextFunction} from "express";
 
-import {newCustomError} from "../../error/CustomError";
-import {responseDict} from "../../../utilities/responsesDictionary";
-import {offeringSchema} from "../../../models/offering/offeringModel";
-import {taxSchema} from "../../../models/taxes/taxModel";
-import {cancellationPolicySchema} from "../../../models/cancellationPolicy/cancellationPolicyModel";
-import {officeLocationSchema} from "../../../models/officeLocation/officeLocationModel";
+import {newCustomError} from "../../../error/CustomError";
+import {responseDict} from "../../../../utilities/responsesDictionary";
+import {offeringSchema} from "../../../../models/offering/offeringModel";
+import {taxSchema} from "../../../../models/taxes/taxModel";
+import {cancellationPolicySchema} from "../../../../models/cancellationPolicy/cancellationPolicyModel";
+import {officeLocationSchema} from "../../../../models/officeLocation/officeLocationModel";
 
 export const newOfferingValidator = z.object({
   id: z.string(),

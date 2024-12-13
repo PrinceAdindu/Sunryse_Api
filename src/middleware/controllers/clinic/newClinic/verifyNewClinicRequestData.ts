@@ -1,9 +1,10 @@
 import {z} from "zod";
 import {Request, Response, NextFunction} from "express";
-import {newCustomError} from "../../error/CustomError";
-import {responseDict} from "../../../utilities/responsesDictionary";
 
-export const newClinicSchema = z
+import {newCustomError} from "../../../error/CustomError";
+import {responseDict} from "../../../../utilities/responsesDictionary";
+
+export const newClinicRequestDataSchema = z
   .object({
     data: z.object({
       email: z.string().email(),
@@ -21,14 +22,14 @@ export const newClinicSchema = z
     }
   });
 
-export type NewClinicData = z.infer<typeof newClinicSchema>;
+export type NewClinicRequestData = z.infer<typeof newClinicRequestDataSchema>;
 
-export function verifyNewClinicData(
+export function verifyNewClinicRequestData(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const result = newClinicSchema.safeParse(req.body);
+  const result = newClinicRequestDataSchema.safeParse(req.body);
   if (!result.success) {
     throw newCustomError(
       responseDict.badRequest,

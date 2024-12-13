@@ -1,22 +1,30 @@
+import {zodErrorsDoc} from "./zodErrorsDocs";
+
 export const errorResponseDocs = {
   type: "object",
   properties: {
-    status: {type: "integer", description: "HTTP Status Code"},
-    name: {type: "string", description: "Error name"},
-    message: {type: "string", description: "Error message"},
+    status: {type: "number", example: 401, description: "HTTP Status Code"},
+    name: {
+      type: "string",
+      example: "Unauthorized Request",
+      description: "Error name",
+    },
+    message: {
+      type: "string",
+      example: "Access token is invalid",
+      description: "Error message",
+    },
     request: {
       type: "string",
+      example: "POST /clinic",
       description: "The original request method and URL",
     },
     operational: {
       type: "boolean",
+      example: "true",
       description: "If the error is operational or not",
     },
-    zodErrors: {
-      type: "array",
-      items: {type: "string"},
-      description: "Zod validation errors, if any",
-    },
+    zodErrors: zodErrorsDoc,
     stack: {
       type: "string",
       description: "Error stack trace (only in development)",
@@ -27,6 +35,7 @@ export const errorResponseDocs = {
     },
     clinicId: {
       type: "string",
+      example: "1G74JD0948B",
       description: "ID of the clinic that was involved in the request",
     },
   },

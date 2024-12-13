@@ -1,5 +1,6 @@
 import {initializeApp, cert} from "firebase-admin/app";
 import {Firestore, getFirestore} from "firebase-admin/firestore"; // Use firebase-admin/firestore for Admin SDK
+
 import config from "../config";
 
 const firebaseAdminConfig = {

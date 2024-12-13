@@ -5,7 +5,7 @@ const router = express.Router();
 import loginController from "./loginController";
 import otpController from "./otpController";
 import logoutController from "./logoutController";
-import verifyAccessToken from "../../middleware/auth/verifyAccessToken";
+import verifyAccessToken from "../../middleware/token/verifyAccessToken";
 
 router.use("/login", loginController);
 

@@ -1,1 +1,1 @@
-Here's your verification code {{code}}
+Email verification code: {{code}}

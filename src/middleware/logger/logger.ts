@@ -7,7 +7,7 @@ export function logReqRes(req: Request, res: Response, next: NextFunction) {
   if (config.env === "development") {
     reqResLogger.info(`REQ <<< ${req.method} ${req.originalUrl}`);
     res.on("finish", () => {
-      reqResLogger.info("RES: >>> sent");
+      reqResLogger.info(`RES: >>> ${req.method} ${req.originalUrl}`);
     });
   }
   next();

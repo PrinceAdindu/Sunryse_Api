@@ -1,28 +1,33 @@
 import {Router, Request, Response, NextFunction} from "express";
-import {compare} from "bcrypt";
 
 import config from "../../config.js";
+import {asyncHandler} from "../../middleware/error/handlers/asyncHandler.js";
+import {newCustomError} from "../../middleware/error/CustomError.js";
+import {responseDict} from "../../utilities/responsesDictionary.js";
+import {
+  verifyLoginRequestData,
+  LoginRequestData,
+} from "../../middleware/controllers/auth/login/verifyLoginRequestData.js";
+
+import {
+  editClinic,
+  findClinic,
+  getClinic,
+} from "../../services/clinic/clinicService.js";
 import {
   verifyRefreshToken,
   createAccessToken,
   createRefreshToken,
 } from "../../services/tokenService.js";
-import {
-  editClinic,
-  findClinic,
-  getClinicAccount,
-} from "../../services/clinic/clinicService.js";
-import {LoginData} from "../../vgr/loginValidator.js";
-import {asyncHandler} from "../../middleware/error/handlers/asyncHandler.js";
-import {newCustomError} from "../../middleware/error/CustomError.js";
-import {responseDict} from "../../utilities/responsesDictionary.js";
+import {comparePassword} from "../../services/auth/authService.js";
 
 const router = Router();
 
-type LoginRequest = Request<object, object, LoginData>;
+type LoginRequest = Request<object, object, LoginRequestData>;
 
 router.post(
   "/",
+  verifyLoginRequestData,
   asyncHandler(async (req: LoginRequest, res: Response, next: NextFunction) => {
     const {email, password} = req.body.data;
 
@@ -35,34 +40,26 @@ router.post(
       );
     }
 
-    const clinicData = await getClinicAccount(foundClinic.id);
-
+    // TODO: Could have better typing for clinicData
+    const clinicData = await getClinic(foundClinic.id, ["account.password"]);
     if (!clinicData) {
       throw newCustomError(
-        responseDict.notFound,
-        "Error querying clinic",
-        false
-      );
-    }
-
-    try {
-      const match = await compare(password, clinicData.password);
-      if (!match) {
-        throw newCustomError(
-          responseDict.unauthRequest,
-          "Incorrect password provided",
-          true
-        );
-      }
-    } catch (error) {
-      throw newCustomError(
         responseDict.unexpected,
-        "Error verifying hashed password",
+        "Error querying clinic for password",
         false
       );
     }
 
-    const tokenBody = {id: foundClinic.id};
+    const match = await comparePassword(password, clinicData.account.password);
+    if (!match) {
+      throw newCustomError(
+        responseDict.unauthRequest,
+        "Incorrect password provided",
+        true
+      );
+    }
+
+    const tokenBody = {clinic: {id: foundClinic.id}};
     const accessToken = createAccessToken(tokenBody);
     const refreshToken = createRefreshToken(tokenBody);
     await editClinic(foundClinic.id, {
@@ -76,7 +73,7 @@ router.post(
       maxAge: parseInt(config.refreshCookieExp),
     });
     return res
-      .status(200)
+      .status(responseDict.success.code)
       .json({message: "Login successful", data: {accessToken}});
   })
 );
@@ -103,8 +100,8 @@ router.post(
       );
     }
 
-    const tokenBody = {id: foundClinic.id};
-    const valid = verifyRefreshToken(refreshToken, tokenBody.id);
+    const tokenBody = {clinic: {id: foundClinic.id}};
+    const valid = verifyRefreshToken(refreshToken, tokenBody.clinic.id);
     if (!valid) {
       throw newCustomError(
         responseDict.forbidden,
@@ -114,7 +111,9 @@ router.post(
     }
 
     const accessToken = createAccessToken(tokenBody);
-    return res.status(200).json({data: {accessToken}});
+    return res
+      .status(responseDict.success.code)
+      .json({message: responseDict.success.name, data: {accessToken}});
   })
 );
 

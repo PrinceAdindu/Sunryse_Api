@@ -21,7 +21,7 @@ export const newClinicSchema = z.object({
   id: z.string().uuid(),
   auth: z.object({
     refreshToken: z.string().nullable(),
-    otpCode: z.number().nullable(),
+    otpCode: z.string().nullable(),
     otpExpiration: z.date().nullable(),
   }),
   account: z.object({
