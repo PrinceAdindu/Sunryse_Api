@@ -94,7 +94,7 @@ router.post(
     const foundClinic = await findClinic("", "", refreshToken);
     if (!foundClinic) {
       throw newCustomError(
-        responseDict.forbidden,
+        responseDict.unauthRequest,
         "Refresh token does not exist",
         true
       );
@@ -104,7 +104,7 @@ router.post(
     const valid = verifyRefreshToken(refreshToken, tokenBody.clinic.id);
     if (!valid) {
       throw newCustomError(
-        responseDict.forbidden,
+        responseDict.unauthRequest,
         "Refresh token is not valid",
         true
       );

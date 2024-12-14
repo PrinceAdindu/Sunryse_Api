@@ -65,7 +65,7 @@ router.get(
       const clinicData = await getClinic(id, fields);
 
       return res.status(200).json({
-        ...clinicData,
+        data: {...clinicData},
         message: "Successfully retrieved clinic details",
       });
     }

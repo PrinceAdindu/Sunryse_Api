@@ -49,14 +49,6 @@ export const otpDocs = {
             },
           },
         },
-        [responseDict.forbidden.code]: {
-          description: responseDict.forbidden.name,
-          content: {
-            "application/json": {
-              schema: errorResponseDocs,
-            },
-          },
-        },
         [responseDict.unexpected.code]: {
           description: responseDict.unexpected.name,
           content: {

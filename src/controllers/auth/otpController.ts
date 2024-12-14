@@ -93,7 +93,11 @@ router.post(
 
       const isExpired = validateOtpExpiration(storedCodeExpiration);
       if (isExpired) {
-        throw newCustomError(responseDict.forbidden, "Otp has expired", true);
+        throw newCustomError(
+          responseDict.unauthRequest,
+          "Otp has expired",
+          true
+        );
       }
 
       const isValid = validateOtpCode(code, storedCode);
