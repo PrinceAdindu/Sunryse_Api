@@ -12,8 +12,6 @@ import {asyncHandler} from "../../middleware/error/handlers/asyncHandler";
 import {newCustomError} from "../../middleware/error/CustomError";
 import {responseDict} from "../../utilities/responsesDictionary";
 
-import {AuthenticatedRequest} from "../../middleware/token/AuthenticatedRequest";
-
 import {
   getClinic,
   createClinic,
@@ -51,6 +49,7 @@ router.post(
   )
 );
 
+//TODO: Should not have to ues ! because verifyAccessToken middleware gaurentees req.authorizedData
 type ClinicRequest = Request<object, object, ClinicRequestData>;
 router.get(
   "/",
@@ -58,7 +57,6 @@ router.get(
   verifyClinicRequestData,
   asyncHandler(
     async (req: ClinicRequest, res: Response, next: NextFunction) => {
-      // TODO: Use typing to fix reliance on <!>
       const id = req.authorizedData!.clinic.id;
       const fields = req.query.fields as string[];
 

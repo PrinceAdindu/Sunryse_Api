@@ -72,15 +72,23 @@ export const clinicDocs = {
       tags: ["clinic"],
       parameters: [
         {
+          name: "Authorization",
+          in: "header",
+          description: "Valid access token in Authorization header",
+          required: true,
+          schema: {
+            type: "string",
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          },
+        },
+        {
           name: "fields",
-          description: "Clinic data fields to query",
+          in: "params",
+          description: "Desired clinic data fields to query",
           required: true,
           schema: {
             type: "array",
-            items: {
-              type: "string",
-              example: ["account.email, account.clinicName"],
-            },
+            example: ["account.email", "account.clinicName"],
           },
         },
       ],
@@ -119,11 +127,6 @@ export const clinicDocs = {
             },
           },
         },
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
         [responseDict.badRequest.code]: {
           description: responseDict.badRequest.name,
           content: {
@@ -155,15 +158,6 @@ export const clinicDocs = {
               schema: errorResponseDocs,
             },
           },
-        },
-      },
-    },
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
         },
       },
     },
